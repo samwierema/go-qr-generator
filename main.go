@@ -29,8 +29,6 @@ func QrGenerator(w http.ResponseWriter, r *http.Request) {
         return
 	}
 
-	log.Print(s)
-
 	code, err := qr.Encode(s, qr.L)
 	if err != nil {
 		http.Error(w, "", http.StatusInternalServerError)
