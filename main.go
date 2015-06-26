@@ -17,13 +17,13 @@ func main() {
 }
 
 func QrGenerator(w http.ResponseWriter, r *http.Request) {
-	es := r.URL.Query().Get("s")
-	if es == "" {
+	data := r.URL.Query().Get("data")
+	if data == "" {
 		http.Error(w, "", http.StatusBadRequest)
 		return
 	}
 
-	s, err := url.QueryUnescape(es)
+	s, err := url.QueryUnescape(data)
 	if err != nil {
 		http.Error(w, "", http.StatusBadRequest)
 	}
