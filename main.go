@@ -2,21 +2,40 @@ package main
 
 import (
 	"bytes"
-	"github.com/boombuler/barcode"
-	"github.com/boombuler/barcode/qr"
+	"fmt"
 	"image/png"
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
+
+	"github.com/boombuler/barcode"
+	"github.com/boombuler/barcode/qr"
 )
 
 func main() {
 	http.HandleFunc("/", QrGenerator)
-	err := http.ListenAndServe(":8080", nil)
+	http.HandleFunc("/health", HealthCheck)
+
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Println("server running on port : ", port)
+
+	err := http.ListenAndServe(fmt.Sprintf(":%s", port), nil)
+
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
+}
+
+func HealthCheck(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("ok"))
 }
 
 func QrGenerator(w http.ResponseWriter, r *http.Request) {
